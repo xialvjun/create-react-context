@@ -1,0 +1,27 @@
+{
+  "name": "@xialvjun/create-react-context",
+  "version": "0.0.1",
+  "description": "A dead simple way to share states across react components, using javascript scope rather than react context api.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xialvjun/create-react-context.git"
+  },
+  "keywords": [
+    "react",
+    "context"
+  ],
+  "author": "xialvjun@live.com",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.3.8",
+    "typescript": "^2.8.1"
+  }
+}
