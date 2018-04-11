@@ -5,7 +5,7 @@ A dead simple way to share states across react components, using javascript scop
 codesandbox.io: https://codesandbox.io/s/977z8440o
 
 ```jsx
-import { createContext } from '@xialvjun/create-react-context';
+import { createContext, Contexts } from '@xialvjun/create-react-context';
 
 const Counter = createContext({
   state: { count: 0 },
@@ -26,6 +26,8 @@ const Counter = createContext({
   }
 });
 
+const Auth = createContext({ state: { logined: false } });
+
 function App() {
   return <div>
     <Counter>
@@ -42,6 +44,9 @@ function App() {
         <button onClick={counter.add_two}>add_two</button>
       </div>}
     </Counter>
+    <Contexts ctxs={[Counter, Auth]}>
+      {(counter, auth) => null}
+    </Contexts>
   </div>
 }
 
