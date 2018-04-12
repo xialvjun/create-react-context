@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { createContext } from './index';
+import { createContext, Contexts } from './index';
+
 
 const Counter = createContext({
   state: { count: 0 },
@@ -24,3 +25,21 @@ const abc = <Counter>
     <button onClick={counter.increment_async}>incr_async</button>
   </div>}
 </Counter>
+
+const Auth = createContext({
+  state: { logined: false },
+  login() {
+    setTimeout(() => {
+      this.setState({ logined: true });
+    }, 1000);
+  },
+  logout() {
+    this.setState({ logined: false });
+  },
+});
+
+const bbb = <Contexts ctxs={{ counter: Counter, auth: Auth }}>
+  {({ counter, auth }) => <div>
+    {counter.state.count}
+  </div>}
+</Contexts>

@@ -22,7 +22,7 @@ export function createContext<T>(model: T) {
     componentWillUnmount() {
       listeners.splice(listeners.indexOf(this.__update__), 1);
     }
-    render() {;
+    render() {
       return this.props.children(ctx);
     }
   }
