@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Adopt } from 'react-adopt';
 
 import { createContext, Contexts } from './index';
 
@@ -18,7 +19,7 @@ const Counter = createContext({
   },
 });
 
-const abc = <Counter>
+const aaa = <Counter>
   {counter => <div>
     <div>{counter.state.count}</div>
     <button onClick={counter.increment}>incr</button>
@@ -43,3 +44,9 @@ const bbb = <Contexts ctxs={{ counter: Counter, auth: Auth }}>
     {counter.state.count}
   </div>}
 </Contexts>
+
+const ccc = <Adopt mapper={{ counter: <Counter/>, auth: <Auth/> }}>
+  {({ counter, auth }) => <div>
+    {counter.state.count}
+  </div>}
+</Adopt>

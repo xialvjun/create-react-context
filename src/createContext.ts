@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 
-export function createContext<T>(model: T) {
+export function createContext<T extends { state: Object, setState?: never }>(model: T) {
   const listeners = [];
   const ctx = Object.assign({}, model, {
     setState(patch) {

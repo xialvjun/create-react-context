@@ -6,6 +6,8 @@ codesandbox.io: https://codesandbox.io/s/977z8440o
 
 ```jsx
 import { createContext, Contexts } from '@xialvjun/create-react-context';
+// hyighly recommend to have a try `react-adopt`
+import { Adopt } from 'react-adopt';
 
 const Counter = createContext({
   state: { count: 0 },
@@ -26,7 +28,17 @@ const Counter = createContext({
   }
 });
 
-const Auth = createContext({ state: { logined: false } });
+const Auth = createContext({
+  state: { logined: false },
+  login() {
+    setTimeout(() => {
+      this.setState({ logined: true });
+    }, 1000);
+  },
+  logout() {
+    this.setState({ logined: false });
+  },
+});
 
 function App() {
   return <div>
@@ -44,9 +56,13 @@ function App() {
         <button onClick={counter.add_two}>add_two</button>
       </div>}
     </Counter>
+    {/* you can use Contexts or Adopt from react-adopt to short your code */}
     <Contexts ctxs={{ counter: Counter, auth: Auth }}>
       {({ counter, auth }) => null}
     </Contexts>
+    <Adopt mapper={{ counter: <Counter/>, auth: <Auth/> }}>
+      {({ counter, auth }) => null}
+    </Adopt>
   </div>
 }
 
