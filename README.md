@@ -44,8 +44,8 @@ function App() {
         <button onClick={counter.add_two}>add_two</button>
       </div>}
     </Counter>
-    <Contexts ctxs={[Counter, Auth]}>
-      {(counter, auth) => null}
+    <Contexts ctxs={{ counter: Counter, auth: Auth }}>
+      {({ counter, auth }) => null}
     </Contexts>
   </div>
 }
