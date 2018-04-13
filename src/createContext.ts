@@ -15,6 +15,7 @@ export function createContext<T extends { state: Object, setState?: never }>(mod
     }
   });
   return class Context extends React.Component<{ children: (ctx: T & { setState(patch: any): void }) => ReactNode }> {
+    static getContext = () => ctx
     __update__ = () => this.forceUpdate()
     componentDidMount() {
       listeners.push(this.__update__);

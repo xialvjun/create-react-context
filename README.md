@@ -67,6 +67,10 @@ function App() {
 }
 
 render(<App />, document.querySelector('#root'));
+
+// if you want to operate on Context outside of React
+const counter = Counter.getContext();
+counter.add_one();
 ```
 
 # FAQ

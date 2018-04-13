@@ -50,3 +50,6 @@ const ccc = <Adopt mapper={{ counter: <Counter/>, auth: <Auth/> }}>
     {counter.state.count}
   </div>}
 </Adopt>
+
+const counter = Counter.getContext();
+counter.increment();
