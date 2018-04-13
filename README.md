@@ -1,6 +1,9 @@
 # create-react-context
 A dead simple way to share states across react components, using javascript scope rather than react context api.
 
+## Install
+`npm i @xialvjun/create-react-context` or `yarn add @xialvjun/create-react-context`
+
 ## Example
 codesandbox.io: https://codesandbox.io/s/977z8440o
 
