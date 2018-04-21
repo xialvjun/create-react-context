@@ -8,9 +8,11 @@ A dead simple way to share states across react components, using javascript scop
 codesandbox.io: https://codesandbox.io/s/977z8440o
 
 ```jsx
-import { createContext, Contexts } from '@xialvjun/create-react-context';
-// hyighly recommend to have a try `react-adopt`
-import { Adopt } from 'react-adopt';
+import { createContext } from '@xialvjun/create-react-context';
+// // hyighly recommend to have a try `react-adopt`
+// import { Adopt } from 'react-adopt';
+// instead of 'react-adopt', I recommend my '@xialvjun/react-compose'. 'react-adopt' has some bugs.
+import { Compose } from '@xialvjun/react-compose';
 
 const Counter = createContext({
   state: { count: 0 },
@@ -59,13 +61,20 @@ function App() {
         <button onClick={counter.add_two}>add_two</button>
       </div>}
     </Counter>
+    {"Contexts and Adopt is deprecated! Use '@xialvjun/react-compose' instead."}
     {/* you can use Contexts or Adopt from react-adopt to short your code */}
+    {/*
     <Contexts ctxs={{ counter: Counter, auth: Auth }}>
       {({ counter, auth }) => null}
     </Contexts>
     <Adopt mapper={{ counter: <Counter/>, auth: <Auth/> }}>
       {({ counter, auth }) => null}
     </Adopt>
+    */}
+    {/* Contexts and Adopt is deprecated! Use '@xialvjun/react-compose' instead. */}
+    <Compose mapper={{ counter: Counter, auth: <Auth />, counter2: ({ children }) => <Counter>{children}</Counter> }}>
+      {({ counter, auth, counter2 }) => null}
+    </Compose>
   </div>
 }
 

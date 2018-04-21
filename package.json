@@ -1,6 +1,6 @@
 {
   "name": "@xialvjun/create-react-context",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A dead simple way to share states across react components, using javascript scope rather than react context api.",
   "main": "lib/index.js",
   "scripts": {

@@ -1,2 +1,8 @@
-export * from './createContext';
-export * from './Contexts';
+import { createContext } from './createContext';
+import { Contexts } from './Contexts';
+
+
+export {
+  createContext,
+  Contexts,
+}
