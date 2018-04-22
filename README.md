@@ -5,33 +5,78 @@ A dead simple way to share states across react components, using javascript scop
 `npm i @xialvjun/create-react-context` or `yarn add @xialvjun/create-react-context`
 
 ## Example
-codesandbox.io: https://codesandbox.io/s/977z8440o
+codesandbox.io: https://codesandbox.io/s/5zz2m570l
 
 ```jsx
 import { createContext } from '@xialvjun/create-react-context';
-// // hyighly recommend to have a try `react-adopt`
-// import { Adopt } from 'react-adopt';
 // instead of 'react-adopt', I recommend my '@xialvjun/react-compose'. 'react-adopt' has some bugs.
 import { Compose } from '@xialvjun/react-compose';
 
+
+// setState is async
 const Counter = createContext({
   state: { count: 0 },
-  add_one() {
+  increment_version_1() {
+    // assume now `this.state.count === 0`
+    console.log('1. now the count is ', this.state.count);   // 1. 0
     this.setState({ count: this.state.count + 1 });
+    console.log('2. now the count is ', this.state.count);   // 2. 0
+    this.setState(state => {
+      console.log('3. now the count is ', state.count);      // 3. 1
+      return { count: state.count + 1 };
+    }, () => {
+      console.log('7. now the count is ', this.state.count); // 7. 3
+    });
+    console.log('4. now the count is ', this.state.count);   // 4. 0
+    this.setState(state => {
+      console.log('5. now the count is ', state.count);      // 5. 2
+      return { count: state.count + 1 };
+    }, () => {
+      console.log('8. now the count is ', this.state.count); // 8. 3
+    });
+    console.log('6. now the count is ', this.state.count);   // 6. 0
   },
-  // ! you can not use arrow function here
-  add_two: function() {
-    // ! state change is sync
+  increment_version_2() {
+    // assume now `this.state.count === 0`
+    console.log('1. now the count is ', this.state.count);   // 1. 0
     this.setState({ count: this.state.count + 1 });
+    console.log('2. now the count is ', this.state.count);   // 2. 0
+    this.setState(state => {
+      console.log('3. now the count is ', state.count);      // 3. 1
+      return { count: state.count + 1 };
+    }, () => {
+      console.log('8. now the count is ', this.state.count); // 8. 1
+    });
+    console.log('4. now the count is ', this.state.count);   // 4. 0
+    this.setState(state => {
+      console.log('5. now the count is ', state.count);      // 5. 2
+      return { count: state.count + 1 };
+    }, () => {
+      console.log('9. now the count is ', this.state.count); // 9. 1
+    });
+    console.log('6. now the count is ', this.state.count);   // 6. 0
     this.setState({ count: this.state.count + 1 });
+    console.log('7. now the count is ', this.state.count);   // 7. 0
   },
-  add_one_async() {
-    // ! of course, arrow function is ok here
+  set_to_0() {
+    this.setState({ count: 0 });
+  },
+  increment_async() {
     setTimeout(() => {
       this.setState({ count: this.state.count + 1 });
     }, 1000);
-  }
+  },
 });
+
+const setState_is_async = <Counter>
+  {counter => <div>
+    <div>{counter.state.count}</div>
+    <button onClick={counter.set_to_0}>set_to_0</button>
+    <button onClick={counter.increment_version_1}>increment_version_1</button>
+    <button onClick={counter.increment_version_2}>increment_version_2</button>
+    <button onClick={counter.increment_async}>increment_async</button>
+  </div>}
+</Counter>
 
 const Auth = createContext({
   state: { logined: false },
@@ -45,45 +90,58 @@ const Auth = createContext({
   },
 });
 
+const we_can_compose_the_render_props = <Compose mapper={{ counter: Counter, auth: Auth }}>
+  {({ counter, auth }) => <div>
+    {counter.state.count}
+  </div>}
+</Compose>
+
+// you can operate the context outside of React
+const counter = Counter.getContext();
+counter.increment_async();
+
+// you can not only use Render Props Component, but also HOC
+const CustomComponent = ({ counter }) => {
+  return <div>{counter.state.count}</div>
+}
+const WrappedCustomComponent = Counter.hoc('counter')(CustomComponent);
+
+
 function App() {
   return <div>
     <Counter>
       {counter => <div>
-        {counter.state.count}
-        <button onClick={counter.add_one}>add_one</button>
-        <button onClick={counter.add_one_async}>add_one_async</button>
+        <div>{counter.state.count}</div>
+        <button onClick={counter.set_to_0}>set_to_0</button>
+        <button onClick={counter.increment_version_1}>increment_version_1</button>
+        <button onClick={counter.increment_version_2}>increment_version_2</button>
+        <button onClick={counter.increment_async}>increment_async</button>
       </div>}
     </Counter>
     Something Others
     <Counter>
       {counter => <div>
-        whatever + {counter.state.count}
-        <button onClick={counter.add_two}>add_two</button>
+        <div>{counter.state.count}</div>
+        <button onClick={counter.set_to_0}>set_to_0</button>
       </div>}
     </Counter>
-    {"Contexts and Adopt is deprecated! Use '@xialvjun/react-compose' instead."}
-    {/* you can use Contexts or Adopt from react-adopt to short your code */}
-    {/*
-    <Contexts ctxs={{ counter: Counter, auth: Auth }}>
-      {({ counter, auth }) => null}
-    </Contexts>
-    <Adopt mapper={{ counter: <Counter/>, auth: <Auth/> }}>
-      {({ counter, auth }) => null}
-    </Adopt>
-    */}
-    {/* Contexts and Adopt is deprecated! Use '@xialvjun/react-compose' instead. */}
     <Compose mapper={{ counter: Counter, auth: <Auth />, counter2: ({ children }) => <Counter>{children}</Counter> }}>
       {({ counter, auth, counter2 }) => null}
     </Compose>
   </div>
 }
-
 render(<App />, document.querySelector('#root'));
-
-// if you want to operate on Context outside of React
-const counter = Counter.getContext();
-counter.add_one();
 ```
+
+# Migrate from v0
+1. Remove `Contexts`:
+> There is a better one: [@xialvjun/react-compose](https://github.com/xialvjun/react-compose)
+
+2. Change `setState` from sync to async:
+> State should keep sync with the view. But view rendering is async, `setState` should be async too.
+
+3. Add `hoc(name: string)`:
+> Render Props Component and Higher Order Component are both good things for sharing states, we shouldn't ignore any one.
 
 # FAQ
 1. Why state change is sync?
