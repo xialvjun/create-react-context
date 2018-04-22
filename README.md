@@ -138,14 +138,15 @@ render(<App />, document.querySelector('#root'));
 > There is a better one: [@xialvjun/react-compose](https://github.com/xialvjun/react-compose)
 
 2. Change `setState` from sync to async:
-> State should keep sync with the view. But view rendering is async, `setState` should be async too.
+> Its signature is the same as React.Component.setState.
 
 3. Add `hoc(name: string)`:
 > Render Props Component and Higher Order Component are both good things for sharing states, we shouldn't ignore any one.
 
 # FAQ
-1. Why state change is sync?
-> React has done the optimization for us: **forceUpdate twice just render once**. And sync state is easy to use.
+1. Why state change is ~~sync~~async?
+> ~~React has done the optimization for us: **forceUpdate twice just render once**. And sync state is easy to use.~~  
+> State should keep sync with the view. But view rendering is async, `setState` should be async too.
 
 2. Why can not I use arrow function?
 > I need to bind your functions on an object to make `this` in your functions correct.
