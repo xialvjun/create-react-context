@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Component, ReactNode } from 'react';
 
-export function createContext<S, M extends { state: S, setState?: never }>(model: M) {
+export function createContext<M extends { state: Object, setState?: never, setStateSync?: never }>(model: M) {
+  type S = M['state'];
   const listeners = [];
 
   let timeout = null;
@@ -19,8 +20,8 @@ export function createContext<S, M extends { state: S, setState?: never }>(model
   }
 
   const ctx = Object.assign({}, model, {
-    setState<K extends keyof S>(
-      partialState: ((prevState: Readonly<S>) => (Pick<S, K> | S | null)) | (Pick<S, K> | S | null),
+    setState(
+      partialState: ((prevState: Readonly<S>) => (Partial<S> | null)) | (Partial<S> | null),
       callback?: () => void
     ) {
       callback && callbacks.push(callback);
@@ -31,7 +32,11 @@ export function createContext<S, M extends { state: S, setState?: never }>(model
       new_state = Object.assign({}, current_state, partialState);
       clearTimeout(timeout);
       timeout = setTimeout(updater, 0);
-    }
+    },
+    setStateSync(partialState: Partial<S> | null) {
+      ctx.state = Object.assign({}, ctx.state, partialState);
+      listeners.forEach(it => it());
+    },
   });
   Object.keys(ctx).forEach(key => {
     if (typeof ctx[key] === 'function') {

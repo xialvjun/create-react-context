@@ -9,6 +9,33 @@ codesandbox.io: https://codesandbox.io/s/5zz2m570l
 
 ```jsx
 import { createContext } from '@xialvjun/create-react-context';
+
+const Auth = createContext({
+  state: { logined: false },
+  login() {
+    setTimeout(() => {
+      this.setState({ logined: true });
+    }, 1000);
+  },
+  logout() {
+    this.setState({ logined: false });
+  },
+});
+
+<Auth>
+  {auth => <div>
+    {auth.state.logined ?
+    <button onClick={auth.logout}>logout</button> :
+    <button onClick={auth.login}>login</button>}
+  </div>}
+</Auth>
+```
+
+
+## Documents
+
+```jsx
+import { createContext } from '@xialvjun/create-react-context';
 // instead of 'react-adopt', I recommend my '@xialvjun/react-compose'. 'react-adopt' has some bugs.
 import { Compose } from '@xialvjun/react-compose';
 
@@ -58,6 +85,20 @@ const Counter = createContext({
     this.setState({ count: this.state.count + 1 });
     console.log('7. now the count is ', this.state.count);   // 7. 0
   },
+  increment_version_3() {
+    // there is also a `setStateSync`
+    // assume now `this.state.count === 0`
+    console.log('1. now the count is ', this.state.count);            // 1. 0
+    this.setStateSync({ count: this.state.count + 1 });
+    console.log('2. now the count is ', this.state.count);            // 2. 1
+    const old_state = this.state;
+    this.setStateSync({ count: this.state.count + 1 });
+    // state is replaced rather than modified
+    console.log('3. now the old_state.count is ', old_state.count);   // 3. 1
+    console.log('4. now the count is ', this.state.count);            // 4. 2
+    this.setStateSync({ count: this.state.count + 1 });
+    console.log('5. now the count is ', this.state.count);            // 5. 3
+  },
   set_to_0() {
     this.setState({ count: 0 });
   },
@@ -74,6 +115,7 @@ const setState_is_async = <Counter>
     <button onClick={counter.set_to_0}>set_to_0</button>
     <button onClick={counter.increment_version_1}>increment_version_1</button>
     <button onClick={counter.increment_version_2}>increment_version_2</button>
+    <button onClick={counter.increment_version_3}>increment_version_3</button>
     <button onClick={counter.increment_async}>increment_async</button>
   </div>}
 </Counter>
@@ -115,6 +157,7 @@ function App() {
         <button onClick={counter.set_to_0}>set_to_0</button>
         <button onClick={counter.increment_version_1}>increment_version_1</button>
         <button onClick={counter.increment_version_2}>increment_version_2</button>
+        <button onClick={counter.increment_version_3}>increment_version_3</button>
         <button onClick={counter.increment_async}>increment_async</button>
       </div>}
     </Counter>
@@ -140,7 +183,10 @@ render(<App />, document.querySelector('#root'));
 2. Change `setState` from sync to async:
 > Its signature is the same as React.Component.setState.
 
-3. Add `hoc(name: string)`:
+3. Add `setStateSync(partialState: Object)`:
+> The same as v0's `setState`.
+
+4. Add `hoc(name: string)`:
 > Render Props Component and Higher Order Component are both good things for sharing states, we shouldn't ignore any one.
 
 # FAQ
@@ -150,3 +196,6 @@ render(<App />, document.querySelector('#root'));
 
 2. Why can not I use arrow function?
 > I need to bind your functions on an object to make `this` in your functions correct.
+
+3. Why add `setStateSync`?
+> Some times we just need **Eventual Consistency** rather than **Strong Consistency** between state and view, `setStateSync` is for this.

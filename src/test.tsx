@@ -50,6 +50,20 @@ const Counter = createContext({
     this.setState({ count: this.state.count + 1 });
     console.log('7. now the count is ', this.state.count);   // 7. 0
   },
+  increment_version_3() {
+    // there is also a `setStateSync`
+    // assume now `this.state.count === 0`
+    console.log('1. now the count is ', this.state.count);            // 1. 0
+    this.setStateSync({ count: this.state.count + 1 });
+    console.log('2. now the count is ', this.state.count);            // 2. 1
+    const old_state = this.state;
+    this.setStateSync({ count: this.state.count + 1 });
+    // state is replaced rather than modified
+    console.log('3. now the old_state.count is ', old_state.count);   // 3. 1
+    console.log('4. now the count is ', this.state.count);            // 4. 2
+    this.setStateSync({ count: this.state.count + 1 });
+    console.log('5. now the count is ', this.state.count);            // 5. 3
+  },
   set_to_0() {
     this.setState({ count: 0 });
   },
@@ -66,6 +80,7 @@ const setState_is_async = <Counter>
     <button onClick={counter.set_to_0}>set_to_0</button>
     <button onClick={counter.increment_version_1}>increment_version_1</button>
     <button onClick={counter.increment_version_2}>increment_version_2</button>
+    <button onClick={counter.increment_version_3}>increment_version_3</button>
     <button onClick={counter.increment_async}>increment_async</button>
   </div>}
 </Counter>
@@ -107,6 +122,7 @@ function App() {
         <button onClick={counter.set_to_0}>set_to_0</button>
         <button onClick={counter.increment_version_1}>increment_version_1</button>
         <button onClick={counter.increment_version_2}>increment_version_2</button>
+        <button onClick={counter.increment_version_3}>increment_version_3</button>
         <button onClick={counter.increment_async}>increment_async</button>
       </div>}
     </Counter>
