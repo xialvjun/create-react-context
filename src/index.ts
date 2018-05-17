@@ -1,6 +1,6 @@
-import { createContext } from './createContext';
+import { Context } from './createContext';
 
 
 export {
-  createContext,
+  Context,
 }
