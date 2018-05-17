@@ -36,6 +36,7 @@ const Auth = AuthContextInstance.Consumer;
 
 ```jsx
 import * as React from 'react';
+import { render } from 'react-dom';
 // instead of 'react-adopt', I recommend my '@xialvjun/react-compose'. 'react-adopt' has some bugs.
 import { Compose } from '@xialvjun/react-compose';
 
@@ -188,6 +189,3 @@ to add
 
 # FAQ
 to add
-
-# TODO
-fix typescript signature

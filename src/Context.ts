@@ -3,12 +3,15 @@ import { Component, ReactNode, ComponentClass } from 'react';
 import { State } from '@xialvjun/state';
 
 
+export type ContextConsumer<T> = ComponentClass<{ children: (context: T) => ReactNode }>;
+
 export class Context<S> extends State<S> {
   // Consumer: ComponentClass<{ children: (context: this) => ReactNode }> = (() => {
-  Consumer = (() => {
+  // Consumer: ComponentClass<{ children: (context: Context<S>) => ReactNode }> = (() => {
+  Consumer: ContextConsumer<this> = (() => {
     const self = this;
-    // return class ContextConsumer extends Component<{ children: (context: typeof self) => ReactNode }> {
-    return class ContextConsumer extends Component<{ children: (context: Context<S>) => ReactNode }> {
+    return class ContextConsumer extends Component<{ children: (context: typeof self) => ReactNode }> {
+    // return class ContextConsumer extends Component<{ children: (context: Context<S>) => ReactNode }> {
       boundForceUpdate = () => this.forceUpdate()
       unsubscribe: () => any
       componentDidMount() {
