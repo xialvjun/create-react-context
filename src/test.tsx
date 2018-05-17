@@ -2,13 +2,11 @@ import * as React from 'react';
 // instead of 'react-adopt', I recommend my '@xialvjun/react-compose'. 'react-adopt' has some bugs.
 import { Compose } from '@xialvjun/react-compose';
 
-import { createContext } from './index';
+import { Context } from './index';
 
-
-// setState is async
-const Counter = createContext({
-  state: { count: 0 },
-  increment_version_1() {
+class CounterContext extends Context<{ count: number }> {
+  state = { count: 0 }
+  increment_version_1 = () => {
     // assume now `this.state.count === 0`
     console.log('1. now the count is ', this.state.count);   // 1. 0
     this.setState({ count: this.state.count + 1 });
@@ -27,8 +25,8 @@ const Counter = createContext({
       console.log('8. now the count is ', this.state.count); // 8. 3
     });
     console.log('6. now the count is ', this.state.count);   // 6. 0
-  },
-  increment_version_2() {
+  }
+  increment_version_2 = () => {
     // assume now `this.state.count === 0`
     console.log('1. now the count is ', this.state.count);   // 1. 0
     this.setState({ count: this.state.count + 1 });
@@ -49,8 +47,8 @@ const Counter = createContext({
     console.log('6. now the count is ', this.state.count);   // 6. 0
     this.setState({ count: this.state.count + 1 });
     console.log('7. now the count is ', this.state.count);   // 7. 0
-  },
-  increment_version_3() {
+  }
+  increment_version_3 = () => {
     // there is also a `setStateSync`
     // assume now `this.state.count === 0`
     console.log('1. now the count is ', this.state.count);            // 1. 0
@@ -63,16 +61,19 @@ const Counter = createContext({
     console.log('4. now the count is ', this.state.count);            // 4. 2
     this.setStateSync({ count: this.state.count + 1 });
     console.log('5. now the count is ', this.state.count);            // 5. 3
-  },
-  set_to_0() {
+  }
+  set_to_0 = () => {
     this.setState({ count: 0 });
-  },
-  increment_async() {
+  }
+  increment_async = () => {
     setTimeout(() => {
       this.setState({ count: this.state.count + 1 });
     }, 1000);
-  },
-});
+  }
+}
+
+const CounterContextInstance = new CounterContext();
+const Counter = CounterContextInstance.Consumer;
 
 const setState_is_async = <Counter>
   {counter => <div>
@@ -85,17 +86,20 @@ const setState_is_async = <Counter>
   </div>}
 </Counter>
 
-const Auth = createContext({
-  state: { logined: false },
-  login() {
+
+class AuthContext extends Context<{ logined: boolean }> {
+  login = () => {
     setTimeout(() => {
       this.setState({ logined: true });
     }, 1000);
-  },
-  logout() {
+  }
+  logout = () => {
     this.setState({ logined: false });
-  },
-});
+  }
+}
+
+const AuthContextInstance = new AuthContext({ logined: false });
+const Auth = AuthContextInstance.Consumer;
 
 const we_can_compose_the_render_props = <Compose mapper={{ counter: Counter, auth: Auth }}>
   {({ counter, auth }) => <div>
@@ -104,14 +108,14 @@ const we_can_compose_the_render_props = <Compose mapper={{ counter: Counter, aut
 </Compose>
 
 // you can operate the context outside of React
-const counter = Counter.getContext();
-counter.increment_async();
+// const counter = Counter.getContext();
+CounterContextInstance.increment_async();
 
 // you can not only use Render Props Component, but also HOC
 const CustomComponent = ({ counter }) => {
   return <div>{counter.state.count}</div>
 }
-const WrappedCustomComponent = Counter.hoc('counter')(CustomComponent);
+const WrappedCustomComponent = CounterContextInstance.Hoc('counter')(CustomComponent);
 
 
 function App() {
@@ -133,7 +137,7 @@ function App() {
         <button onClick={counter.set_to_0}>set_to_0</button>
       </div>}
     </Counter>
-    <Compose mapper={{ counter: Counter, auth: <Auth />, counter2: ({ children }) => <Counter>{children}</Counter> }}>
+    <Compose mapper={{ counter: Counter, auth: <Auth>{_=>_}</Auth>, counter2: ({ children }) => <Counter>{children}</Counter> }}>
       {({ counter, auth, counter2 }) => null}
     </Compose>
   </div>

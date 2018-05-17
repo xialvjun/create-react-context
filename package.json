@@ -3,6 +3,7 @@
   "version": "2.0.1",
   "description": "A dead simple way to share states across react components, using javascript scope rather than react context api.",
   "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,9 +23,10 @@
   },
   "devDependencies": {
     "@types/react": "^16.3.8",
+    "@xialvjun/react-compose": "^0.0.1",
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "@xialvjun/state": "^0.0.1"
+    "@xialvjun/state": "^0.0.2"
   }
 }
