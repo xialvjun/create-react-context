@@ -14,11 +14,13 @@ const Auth = createContext({
   state: { logined: false },
   login() {
     setTimeout(() => {
+      // here, autocomplete is not very good.
       this.setState({ logined: true });
     }, 1000);
   },
-  logout() {
-    this.setState({ logined: false });
+  logout: () => {
+    // here, autocomplete is totally ok.
+    Auth.getContext().setState({ logined: false });
   },
 });
 
@@ -36,6 +38,7 @@ const Auth = createContext({
 
 ```jsx
 import { createContext } from '@xialvjun/create-react-context';
+import { render } from 'react-dom';
 // instead of 'react-adopt', I recommend my '@xialvjun/react-compose'. 'react-adopt' has some bugs.
 import { Compose } from '@xialvjun/react-compose';
 
@@ -100,6 +103,10 @@ const Counter = createContext({
     console.log('5. now the count is ', this.state.count);            // 5. 3
   },
   set_to_0() {
+    // ! use normal function and use this in it, you don't have right type signature.
+    // ! It means editor can not autocomplete this.set_to_0
+    // * but you can use Counter.getContext() to get the real context obj, then the autcomplete will be fine
+    // * so because you didn't use this in the function, you can use arrow function.
     this.setState({ count: 0 });
   },
   increment_async() {
@@ -194,8 +201,5 @@ render(<App />, document.querySelector('#root'));
 > ~~React has done the optimization for us: **forceUpdate twice just render once**. And sync state is easy to use.~~  
 > State should keep sync with the view. But view rendering is async, `setState` should be async too.
 
-2. Why can not I use arrow function?
-> I need to bind your functions on an object to make `this` in your functions correct.
-
-3. Why add `setStateSync`?
+2. Why add `setStateSync`?
 > Some times we just need **Eventual Consistency** rather than **Strong Consistency** between state and view, `setStateSync` is for this.

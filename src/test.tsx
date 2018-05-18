@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { render } from 'react-dom';
 // instead of 'react-adopt', I recommend my '@xialvjun/react-compose'. 'react-adopt' has some bugs.
 import { Compose } from '@xialvjun/react-compose';
 
@@ -64,8 +65,12 @@ const Counter = createContext({
     this.setStateSync({ count: this.state.count + 1 });
     console.log('5. now the count is ', this.state.count);            // 5. 3
   },
-  set_to_0() {
-    this.setState({ count: 0 });
+  set_to_0: () => {
+    // ! use normal function and use this in it, you don't have right type signature.
+    // ! It means editor can not autocomplete this.set_to_0
+    // * but you can use Counter.getContext() to get the real context obj, then the autcomplete will be fine
+    // * so because you didn't use this in the function, you can use arrow function.
+    Counter.getContext().setState({ count: 0 });
   },
   increment_async() {
     setTimeout(() => {
