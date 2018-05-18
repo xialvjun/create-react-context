@@ -138,7 +138,7 @@ function App() {
         <button onClick={counter.set_to_0}>set_to_0</button>
       </div>}
     </Counter>
-    <Compose mapper={{ counter: Counter, auth: <Auth />, counter2: ({ children }) => <Counter>{children}</Counter> }}>
+    <Compose mapper={{ counter: Counter, auth: <Auth>{_=>_}</Auth>, counter2: ({ children }) => <Counter>{children}</Counter> }}>
       {({ counter, auth, counter2 }) => null}
     </Compose>
   </div>
