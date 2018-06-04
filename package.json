@@ -1,33 +1,44 @@
 {
   "name": "@xialvjun/create-react-context",
-  "version": "2.0.1",
-  "description": "A dead simple way to share states across react components, using javascript scope rather than react context api.",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/xialvjun/create-react-context.git"
-  },
-  "keywords": [
-    "react",
-    "context"
-  ],
-  "author": "xialvjun@live.com",
-  "license": "MIT",
+  "version": "2.1.0",
+  "description":
+    "A dead simple way to share states across react components, using javascript scope rather than react context api.",
+  "repository": "github:xialvjun/create-react-context",
+  "keywords": ["react", "context"],
+  "----------------": "----------------",
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
+    "react": "^16.3.2"
   },
   "devDependencies": {
     "@types/react": "^16.3.8",
     "@types/react-dom": "^16.0.5",
-    "@xialvjun/react-compose": "^0.0.1",
-    "typescript": "^2.8.1"
+    "@xialvjun/react-compose": "^0.0.3",
+    "rimraf": "^2.6.2",
+    "typescript": "^2.8.3"
   },
   "dependencies": {
-    "@xialvjun/state": "^0.0.2"
+    "@xialvjun/state": "^0.0.3"
+  },
+  "================": "================",
+  "author": "xialvjun@live.com",
+  "license": "MIT",
+  "++++++++++++++++": "++++++++++++++++",
+  "files": ["src/", "es/", "lib/", "dist/", "types/"],
+  "-esnext": "esnext_source_code_not_ts",
+  "module": "es/index.js",
+  "main": "lib/index.js",
+  "-unpkg": "dist/index.js",
+  "-jsdelivr": "dist/index.js",
+  "types": "types/index.d.ts",
+  "################": "################",
+  "scripts": {
+    "build":
+      "npm run build:es && npm run build:lib && npm run build:dist && npm run build:types",
+    "build:es": "rimraf -r es && tsc --outDir es --module es6",
+    "build:lib": "rimraf -r lib && tsc --outDir lib --module commonjs",
+    "build:dist": "rimraf -r dist && echo not_implemented",
+    "build:types":
+      "rimraf -r types && tsc --outDir types --declaration --emitDeclarationOnly",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
