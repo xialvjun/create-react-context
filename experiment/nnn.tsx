@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Component } from 'react';
+import { Component } from "react";
 // import { render } from "react-dom";
 
 const Counter = React.createContext<CounterProvider>(null);
@@ -19,16 +19,20 @@ class CounterProvider extends React.Component {
   render() {
     // 必须抽出新对象，不可以直接把 this 作为 value 传给 Provider，那样会被阻断渲染
     // CounterProvider render 不会引起 this.props.children render，所以没有性能问题
-    const { props, ...without_props } = this as any;
+    const new_this = { ...(this as any) };
     return (
-      <Counter.Provider value={without_props}>
+      <Counter.Provider value={new_this}>
         {this.props.children}
       </Counter.Provider>
     );
   }
 }
 
-const hoc = name => BaseComponent => p => <Counter.Consumer>{counter => <BaseComponent {...{...p, [name]: counter}}/>}</Counter.Consumer>
+const hoc = name => BaseComponent => p => (
+  <Counter.Consumer>
+    {counter => <BaseComponent {...{ ...p, [name]: counter }} />}
+  </Counter.Consumer>
+);
 
 const App = () => (
   <CounterProvider>

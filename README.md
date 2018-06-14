@@ -248,18 +248,26 @@ class CounterProvider extends React.Component {
     }, 1000);
   };
   render() {
-    // 必须抽出新对象，不可以直接把 this 作为 value 传给 Provider，那样会被阻断渲染
-    // CounterProvider render 不会引起 this.props.children render，所以没有性能问题
-    const { props, ...without_props } = this as any;
+    // method_1: we should construct a new object，can not juse pass `this` as `value` to Provider，because Context.Consumer is a PureComponent
+    // CounterProvider render won't cause this.props.children render, so there is no performance problem
+    const new_this = { ...(this as any) };
+    // OR
+    // method_2: <Counter.Provider value={[this]}>
+    // method_1 is easy to use Consumer, but the function on Provider should be bounded, like use arrow function.
+    // method_2 is some what tedious to use Consumer
     return (
-      <Counter.Provider value={without_props}>
+      <Counter.Provider value={new_this}>
         {this.props.children}
       </Counter.Provider>
     );
   }
 }
 
-const hoc = name => BaseComponent => p => <Counter.Consumer>{counter => <BaseComponent {...{...p, [name]: counter}}/>}</Counter.Consumer>
+const hoc = name => BaseComponent => p => (
+  <Counter.Consumer>
+    {counter => <BaseComponent {...{ ...p, [name]: counter }} />}
+  </Counter.Consumer>
+);
 
 const App = () => (
   <CounterProvider>
